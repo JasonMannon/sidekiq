@@ -49,6 +49,7 @@ en:
   OneWeek: 1 week
   OriginallyFailed: Originally Failed
   Pause: Pause
+  PauseAll: Pause All
   Paused: Paused
   PeakMemoryUsage: Peak Memory Usage
   Plugins: Plugins
@@ -83,6 +84,7 @@ en:
   ThreeMonths: 3 months
   Time: Time
   Unpause: Unpause
+  UnpauseAll: Unpause All
   Uptime: Uptime (days)
   Utilization: Utilization
   Version: Version

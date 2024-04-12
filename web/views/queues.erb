@@ -1,5 +1,16 @@
 <div class="header-container">
   <h1><%= t('Queues') %></h1>
+  <% if Sidekiq.pro? %>
+    <div>
+      <form method="POST" class="warning-messages">
+        <%= csrf_tag %>
+        <div class="btn-group pull-right flip">
+          <input class="btn btn-warn" type="submit" name="pause" value="<%= t('PauseAll') %>" data-confirm="<%= t('AreYouSure') %>"/>
+          <input class="btn btn-warn" type="submit" name="unpause" value="<%= t('UnpauseAll') %>" data-confirm="<%= t('AreYouSure') %>"/>
+        </div>
+      </form>
+    </div>  
+  <% end %>
 </div>
 
 <div class="table_container">

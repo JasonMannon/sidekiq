@@ -283,6 +283,80 @@ describe Sidekiq::Web do
     end
 
     assert_mock mock
+  end  
+
+  it "can attempt to pause multiple queues" do
+    Sidekiq.stub(:pro?, true) do
+      mocked_queues = Array.new(3) do
+        mock = Minitest::Mock.new
+        mock.expect :pause!, true
+        mock
+      end
+
+      Sidekiq::Queue.stub :all, mocked_queues do
+        stub = lambda do |queue_name|
+          assert_equal "foo", queue_name
+          mock
+        end      
+        post "/queues", "pause" => "Pause"
+      end    
+    end
+  end  
+
+  it "can attempt to unpause multiple queues" do
+    Sidekiq.stub(:pro?, true) do
+      mocked_queues = Array.new(3) do
+        mock = Minitest::Mock.new
+        mock.expect :unpause!, true
+        mock
+      end
+
+      Sidekiq::Queue.stub :all, mocked_queues do
+        stub = lambda do |queue_name|
+          assert_equal "foo", queue_name
+          mock
+        end      
+        post "/queues", "unpause" => "UnPause"
+      end    
+    end
+  end   
+  
+  it 'ignores to attempt to unpause all queues with pro disabled' do
+    mocked_queues = Array.new(3) do
+      mock = Minitest::Mock.new
+      mock
+    end
+
+    stub = lambda do |queue_name|
+      assert_equal 'foo', queue_name
+      mock
+    end
+
+    Sidekiq::Queue.stub :all, mocked_queues do
+      post '/queues/foo', 'unpause' => 'unpause'
+      assert_equal 302, last_response.status
+    end
+
+    mocked_queues.each { |mock| assert_mock mock }
+  end
+
+  it 'ignores to attempt to pause all queues with pro disabled' do
+    mocked_queues = Array.new(3) do
+      mock = Minitest::Mock.new
+      mock
+    end
+
+    stub = lambda do |queue_name|
+      assert_equal 'foo', queue_name
+      mock
+    end
+
+    Sidekiq::Queue.stub :all, mocked_queues do
+      post '/queues/foo', 'pause' => 'pause'
+      assert_equal 302, last_response.status
+    end
+
+    mocked_queues.each { |mock| assert_mock mock }
   end
 
   it "can delete a job" do

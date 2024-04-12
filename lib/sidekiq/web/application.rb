@@ -131,6 +131,16 @@ module Sidekiq
       erb(:queue)
     end
 
+    post "/queues" do
+      if Sidekiq.pro? && params["pause"]
+        queues.each(&:pause!)
+      elsif Sidekiq.pro? && params["unpause"]
+        queues.each(&:unpause!)
+      end
+
+      redirect "#{root_path}queues"
+    end    
+
     post "/queues/:name" do
       queue = Sidekiq::Queue.new(route_params[:name])
 

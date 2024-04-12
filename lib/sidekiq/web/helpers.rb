@@ -170,6 +170,10 @@ module Sidekiq
       @processes ||= Sidekiq::ProcessSet.new
     end
 
+    def queues
+      @queues ||= Sidekiq::Queue.all
+    end
+
     # Sorts processes by hostname following the natural sort order
     def sorted_processes
       @sorted_processes ||= begin
